@@ -1,0 +1,229 @@
+1. Introduction
+-------------------------------------------------------------------
+Cotainers : container are completly isolated environment as they can have their own services and process like VM except they are shaing same OS
+
+Docker utilized LXC container.
+
+2. Docker Commands
+--------------------------------
+2.1.Basic Docker Commands
+--------------------------------
+	1.docker run ubuntu
+	--------------------------
+	  command : $ docker run ubuntu
+	  
+	  a.docker run command is used to run a container from a image 
+	  b.this is command is used to run an instance of ubuntu os image from docker host,if already exist then pull the image down other wise download from docker hub.
+
+	2.List Container  
+	----------------------------
+	   command : $ docker ps
+	   
+	   CONTAINER ID   IMAGE    COMMAND       CREATED      STATUS          PORTS               NAMES
+	   
+	   a.This show all running container and their basic information.
+	   b.It will show container Id,image,created date
+	   
+	   to see all container are running or not : docker ps -a
+	   this will show are running as well as previous running container
+
+	3.Stop container
+	----------------------------
+	   commnd : $ docker stop <NAMES> or <CONTAINER ID>
+	   
+	   a.This command is used to stop a container.
+	   b.We need to give container id or name with stop command
+
+	4.Remove a container
+	-----------------------------
+	   command : $ docker rm <NAMES> or <CONTAINER ID>
+	   
+	5.List Images
+	----------------------------
+	   command : $ docker images
+	   
+	   a.Shows all images or which we have downloaded from docker hub.
+	   
+	6.Remove Images
+	---------------------------
+	   command :  $ docker rmi ubuntu
+	  
+	7.Pull a images 
+	---------------------------
+	   command :  $ docker pull ubuntu
+	   
+	   
+	More command 
+	-------------------
+	1.$ docker run ubuntu sleep 1000 -  when container start it run the sleep command and went to sleep for 1000 sec
+
+	2.Execute Command - run the command in already running container
+						docker ps : it will show all running container
+						If i want to see files inside running container then we will use execute command
+						
+		 $ docker exec <DOCKER_NAME> cat /etc/hosts  
+						
+						It show /etc/hosts file inside running container
+						
+
+2.2. Demo - Docker Commands
+----------------------------- 
+   a.We'll start with a docker run command so that docker run command is used to run a container from an image.
+   b.So you need to specify an image name to find out what images you can use.
+   c.Go to the docker hub website and go to Explore and you should be able to see a lot of default official
+   
+	   $ docker run centos
+	   
+	   $ docker run -it centos bash - docker run the centos container(centos OS) and run the bash command and loged into container becoz used -it option
+							
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+			$ docker run -it centos bash
+			[root@940bcf88afc1 /]#
+			
+			now just check OS i am inside is on or not
+			[root@940bcf88afc1 /]# cat /etc/*release*
+			
+			[root@940bcf88afc1 /]# exit
+			
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+			$ clear
+		
+   d.We're going to see is the ps command		
+   
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+			$ docker ps
+			CONTAINER ID   IMAGE   COMMAND      CREATED        STATUS            PORTS            NAMES	
+
+			No container is running becoz we exited from centos.
+			
+			$docker run centos sleep 20
+			
+			It's just going to sleep for 20 seconds and then it's just going to shut down.
+			
+			$docker run -d centos sleep 20
+			2dad282b14707916d78c0046e0c279dc6f567fa0d6c962cf2745d7038a5575f9
+			
+			if want to run in background so -d option is given & we got container id
+			 
+			$  docker ps
+			CONTAINER ID     IMAGE      COMMAND          CREATED             STATUS              PORTS        NAMES
+			4b2dcec1da7e     centos     "sleep 20"       9 seconds ago       Up 9 seconds                     sweet_bouman
+			
+			after some time if you will enter docker ps command then it show nothing becoz it slept for 20 sec
+			
+			
+			$docker run -d centos sleep 2000
+			
+			$docker ps -a
+			
+			I want to exit from current container
+			
+			$docker stop ca7ee7ac7825
+						
+			It will take some time and then exit if you will docker ps - a then it will show STATUS with exit code.
+			normal exit container will show STATUS as 0.
+			
+			if you wan to remove multipe container at same time we have to use 
+			docker rm <3 letter of 1 container><3 letter of 2 container><3 letter of 3 container>
+			
+			$ docker rm 04b 19b 940
+			04b
+			19b
+			940
+			
+			$ docker images
+			
+			$ docker rmi ubuntu centos hello-world
+			
+
+3. Docker Run
+------------------------------
+3.1. Docker Run
+-----------------------------
+	a.Run Tag :
+	
+		$docker run ubuntu
+	    
+		running with tag
+	     
+		$docker run ubuntu:17.04 - this 17.04 is called as tag
+	  
+	b.Run - Attach & Detach
+		
+		$docker run mmumshad/simple-webapp
+		
+		$docker run -d mmumshad/simple-webapp ---> run the dockor container in detached mode by providing the - option
+		
+		$docker attach charming_kalam  ----> attach mode
+		
+	c.Run - STDIN
+	
+		
+	    $docker run mmumshad/simple-prompt-docker
+		
+		$docker run -i mmumshad/simple-prompt-docker ---> listen to standard input 
+
+			
+	d.Run - Port Mapping
+
+		$docker run -p 80/5000 mmumshad/simple-webapp --> porting of port no 5000 to 80
+		
+		$docker run -p 8000/5000 mmumshad/simple-webapps --> porting of port no 5000 to 8000
+		
+		$docker run -p 8001/5000 mmumshad/simple-webapps  ->we can't port a portno twice
+		
+	
+	e.Run - Volumn Mapping
+	
+		$docker run mysql
+		
+		$docker stop mysql
+		
+		$docker rm mysql
+		
+		$docker run -v /opt/datadir:/var/lib/mysql mysql -->placing all data to /opt/datadir
+		
+3.2. Demo - Advanced Docker Run Features
+------------------------------------------------
+	jenkins :
+	---------------
+	    $docker run jenkins
+		
+		how to know ip in which jenkis is running
+		
+		$docker inspect abf81f0e1076<CONTAINER_ID>
+		
+		"IPAddress": "172.17.0.4",
+		 
+		 go to browser : http://172.17.0.4:8080  ---> but it won't run
+		
+		$docker run -p 8080:8080 jenkins  ---> we need to port into external host
+		
+		192.168.99.100:8080	
+		
+		stop it again run it then again it is running on new container so it is required admin username and password
+		
+		create a foler my-jenkins-data
+		
+		You can also use a volume container:
+	
+		$docker run -p 8080:8080 -v /root/my-jenkins-data:/var/jenkins_home -u root jenkins
+		
+		again enter admin password
+		
+		create a job(freestyle project)
+		
+		now shutdown docker and run again
+		
+		$docker run -p 8080:8080 -v /root/my-jenkins-data:/var/jenkins_home -u root jenkins
+		
+		refesh browser insted of going initial page it asking for username and password
+		
+4. Docker Images
+------------------------------
+4.1 Docker Images
+-----------------------------		
+			
+		Docker With python
+		
+		
