@@ -1,0 +1,692 @@
+Udemy Tutorials : Master Docker with Java - DevOps for Spring Microservices
+*******************************************************************************
+
+Section 1: Introduction
+-------------------------------------------------------------------------------
+1.1 - Deploy Spring Boot Applications to Docker - Getting Started
+-------------------------------------------------------------------------------
+
+	https://github.com/in28minutes/docker-crash-course
+	
+Section 2: Getting Started with Docker-
+-------------------------------------------------------------------------------
+2.1 - Installing Docker - Docker
+-------------------------------------------------------------------------------
+	$ docker --version
+	
+	$ docker -v
+	
+2.1 - Quick Tip for Windows 10 : Use 192.168.99.100 in URL instead of localhost
+-------------------------------------------------------------------------------
+
+
+2.3 - Your First Docker Usecase - Deploy a Spring Boot Application
+-------------------------------------------------------------------------------
+	* If you want to deploy applciation into different environment.
+	
+2.4 - Docker Concepts - Registry, Repository, Tag, Image & Containers
+-------------------------------------------------------------------------------
+    * you run the command in operation team system and enter this command
+	
+	$ docker run in28min/hello-world-rest-api-h2:0.0.1-SNAPSHOT
+	
+	* When we run this command it will download images from docker registry and registry contains a lot repository.
+	
+	* hub.docker.com - is called as a docker registry and registry contains a lot repository and version of 
+	  different application.
+	
+	* Running version of a images is called as container.
+	
+	* Image is a static version and container is a dynamic version
+
+	$ docker run -p 5000:5000 in28min/hello-world-rest-api-h2:0.0.1-SNAPSHOT  ---> mapping inernal port to external port
+	
+2.5 - Playing with Docker Images and Containers
+-------------------------------------------------------------------------------
+	
+	* When we will stop running docker container and application will also stop.If we don't want to stop running 
+	  applciation then we have to run applciation in deatached mode.
+	
+	$ docker run -p 5000:5000 -d in28min/todo-rest-api-h2:0.0.1-SNAPSHOT
+	
+	-d : It is used for deattched mode but if you run in deattached mode it won't show logs.
+	
+	* It will show docker id If you want to see the logs then we have to run the command
+	
+	$ docker logs <Docker_ID>
+	
+	$ docker container ls  ----> to see which docker container is running
+	
+	* We can run multipe container from the same images
+	
+	$ docker run -p 5001:5000 -d in28min/todo-rest-api-h2:0.0.1-SNAPSHOT  ---> Mapping to 5001 port
+	
+	$ docker container ls -a -----> show running container and exit container
+	
+2.6 - Understanding Docker Architecture - Docker Client, Docker Engine
+-------------------------------------------------------------------------------
+
+											Docker Client
+												|
+												|
+											Dicker Demon
+												|												    |															
+				 -------------------------------------------------------------
+				|								|							  |
+				|								|							  |	
+				|								|							  |
+			Containers						Local Images				Image Registry					
+											
+										
+
+	    * Docker Demon(Engine) is responsible for Docker Images and Containers and push images into registry.
+		
+2.7 - Why is Docker Popular
+-------------------------------------------------------------------------------
+
+	* Most of the application are deployed into cloud and we can install docker into cloud also.
+	
+	* Azure provide a serive that is azure container service.
+	
+	* AWS provide elastic container service.
+	
+2.8 - Playing with Docker Images
+-------------------------------------------------------------------------------
+
+	$  docker images
+	
+		REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+		ubuntu                   latest              4e5021d210f6        5 weeks ago         64.2MB
+		
+	$ docker tag ubuntu:latest ubuntu:1.0.0RELEASE  ---> creating tag,same image will show with 2 tags
+		
+	$ docker images
+		REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+		ubuntu                   1.0.0RELEASE        4e5021d210f6        5 weeks ago         64.2MB
+		ubuntu                   latest              4e5021d210f6        5 weeks ago         64.2MB
+		
+	$ docker tag ubuntu:latest ubuntu:1.0.1.RELEASE
+
+	$ docker images
+		REPOSITORY               TAG                 IMAGE ID            CREATED             SIZE
+		ubuntu                   1.0.0RELEASE        4e5021d210f6        5 weeks ago         64.2MB
+		ubuntu                   1.0.1.RELEASE       4e5021d210f6        5 weeks ago         64.2MB
+		ubuntu                   latest              4e5021d210f6        5 weeks ago         64.2MB
+	
+	* but here you can see image Id wiil be same.
+	
+	
+	$ docker search mysql
+		NAME                   DESCRIPTION                  			   STARS         OFFICIAL      AUTOMATED
+		mysql              MySQL is a widely used, open-source relation…   9418             [OK]
+		mariadb            MariaDB is a community-developed fork of MyS…   3392             [OK]
+		mysql/mysql-server ptimized MySQL Server Docker images. Create…    689                           [OK]
+	
+	* If it is a docker offcial and if not offical it not official..
+
+	$ docker image history 4e5021d210f6 ----> used for search history
+	
+2.9 -  Playing with Docker Containers
+-------------------------------------------------------------------------------
+
+	$ docker run -p 5001:5000 -d in28min/todo-rest-api-h2:0.0.1-SNAPSHOT
+	
+	$ docker container pause <CONATINER_ID>  ---> pause the conatiner,means container is running but application is not running
+	
+	$ docker container unpause <CONATINER_ID>  ---> upause
+	
+	* Pause means just stop the conatiner in some state.
+	
+	* If you want to remove all of the stopped container
+	
+	$ dockker container prune
+	
+	$ docker container ls -a or  $ docker ps -s ----> both are same
+	
+	$ docker conatiner logs -f <CONTAINER_ID> -----> tell the container i will keep folowing the logs
+	
+	$ docker container stop <CONTAINER_ID>  ----> it will give some time to stop continer(gracefull shutdown)
+	
+	$ docker container kill <CONTAINER_ID>  ---> Immediately stop conatiner,it will not give time
+	
+	$ docker run -p 5000:5000 -d --restart=always in28min/todo-rest-api-h2:0.0.1-SNAPSHOT --> by default no
+	
+	* It means when docker engine start it will check restart policy if it is "always" container will start will 
+	   decoker desktop start.
+	  
+2.10 - Playing with Docker Commands - stats, system
+-------------------------------------------------------------------------------
+	$ docker events   ---> It will show what is heppening in the background.
+	
+	$ docker top ----> It is used to check what is top process which is running in a specific container.
+	
+	$ docker stats  ---> what is stat,memory
+	
+	$ docker run -m 512m --cpu-quota 50000 -d in28min/todo-rest-api-h2:0.0.1-SNAPSHOT ----> m is used for memory and 
+																				      -- cpu is used for cpu quota
+																					  
+	
+	$ docker system df  ---> show want docker conatiner manges,it manges Images,Containers
+	
+
+Section 3: Import All Java Spring Boot Projects for Docker
+-------------------------------------------------------------------------------
+
+	* Downloaded and imported git project from in28minutes git.
+	
+Section 4: Docker with Java Spring Boot Hello World Rest API
+-------------------------------------------------------------------------------
+4.1 - Setting up 01 Spring Boot Hello World Rest API in Local
+-------------------------------------------------------------------------------
+
+	* Create spring boot project with web,devtools dependency.
+	
+4.2 - Build Docker Image Manually for 01 Hello World Rest API
+-------------------------------------------------------------------------------
+
+	* Creating Image Manually
+	
+	* Building an Image
+			1.Build a Jar - /target/hello-world-rest-api.jar
+			2.Setup the Prerequisites for Running the JAR - openjdk:8-jdk-alpine
+			3.Copy the jar
+			4.Run the jar
+			
+	1. Build a Jar
+	
+		run the application.
+			Run As --> Maven Build --->package
+	
+	2. Setup the Prerequisites for Running the JAR
+		
+		go to F:\Workspace\TechM\Docker\01-hello-world-rest-api\target		   	                                               
+	
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api/target
+		$ docker run -dit openjdk:8-jdk-alpine
+		
+		-d --> used for deattached mode
+		-i --> we are attaching an interactive shell to the running conatiner
+		
+		$ docker ps
+		CONTAINER ID        IMAGE                  COMMAND             CREATED             STATUS        PORTS          NAMES
+		a4f6449fe804        openjdk:8-jdk-alpine   "/bin/sh"           26 seconds ago      Up 26 Second           upbeat_shamir
+		
+		$ docker container exec upbeat_shamir ls \tmp ---> execute the running container and see file in \tmp foler
+		
+	3.Copy the jar
+	
+		* copy the jar into running container.
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api/target
+		
+		$ docker container cp  hello-world-rest-api.jar cool_pascal:/tmp
+		
+		$ docker container exec cool_pascal ls /tmp  ---> see what is present inside \tmp folder
+			hello-world-rest-api.jar
+			
+	4.Run the jar
+		
+		* before running the jar we have to do 2 steps
+		
+			1.save the container which we have created as a image.
+			
+				$ docker container commit cool_pascal in28min/hello-world-rest-api:manual1
+														<REPO Name>                   <Tag>
+														
+				$ docker images
+				
+				REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE				
+				in28min/hello-world-rest-api   manual1             0127f1b024a5        4 seconds ago       122MB
+				
+			
+				$ docker run in28min/hello-world-rest-api:manual1 
+				
+				  It immediately exit,and if we want to see which image is running
+				 
+				$ docker container ls
+					CONTAINER ID        IMAGE                  COMMAND             CREATED             STATUS              PORTS               NAMES
+					a4f6449fe804        openjdk:8-jdk-alpine   "/bin/sh"           18 minutes ago      Up 18 minutes                           upbeat_shamir
+				  
+				   It won't show in28min/hello-world-rest-api is running becoz we didn't attached through startup
+				   
+			2.Attach jar through startup
+			
+			$ docker container commit --change='CMD ["java","-jar","/tmp/hello-world-rest-api.jar"]' cool_pascal in28min/hello-world-rest-api:manual2
+					
+			$ docker images
+				REPOSITORY                     TAG                 IMAGE ID            CREATED             SIZE
+				in28min/hello-world-rest-api   manual2             f73e4e82c066        31 seconds ago      122MB
+				in28min/hello-world-rest-api   manual1             0127f1b024a5        12 minutes ago      122MB
+				
+				New image is created with manual2 tag.
+				
+			$ docker run -p 8081:8001 in28min/hello-world-rest-api:manual2
+			
+			Now run the application on browser 
+				
+				http://192.168.99.100:8081/hello-world
+				http://192.168.99.100:8081/hello-world-bean
+			
+4.3 - Quick Tip for Windows 10 : Use 192.168.99.100 in URL instead of localhost
+---------------------------------------------------------------------------------
+
+			$ docker-machine ip
+				192.168.99.100
+			
+4.4 - Use Dockerfile to Build Docker Image
+---------------------------------------------------------------------------------
+			
+	* Dockerfile contains the instruction that is required to execute docker image.
+		
+		*.We will start from base images.Right Click on project and create a new file Dockerfile.(D should be capital with noextension)
+		*.In Dockerfile dile we need to give instruction that we need to execute.
+		
+			1.We will start from base images means from which image container should be created.for us base image is openjdk:8-jdk-alpine
+			  so instruction from base image executed.
+			  
+				FROM openjdk:8-jdk-alpine
+				
+			2.Copy the jar with same image name.
+			
+				ADD   target/hello-world-rest-api.jar      hello-world-rest-api.jar
+				      <PATH WHICH JAR NEED TO COPY>
+					  
+			3.Now we need to run the command for startup(earlier we are using "cmd" now we wiil use ENTRYPOINT)
+			
+				ENTRYPOINT ["sh","-c","java -jar /hello-world-rest-api.jar"]
+				
+				$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+				
+				-t ---> becoz we need to give tag
+				.  ---> We need to give . it is compulsory
+				
+			    PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api/target
+				$ cd ../
+
+				PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+				$ ls -lrt
+				total 33
+				-rw-r--r-- 1 PRAVEEN 197121  6608 Apr 28 01:16 mvnw.cmd
+				-rwxr-xr-x 1 PRAVEEN 197121 10070 Apr 28 01:16 mvnw*
+				drwxr-xr-x 1 PRAVEEN 197121     0 Apr 28 01:16 src/
+				-rw-r--r-- 1 PRAVEEN 197121   780 Apr 28 01:16 HELP.md
+				-rw-r--r-- 1 PRAVEEN 197121  2855 May  1 20:17 pom.xml
+				drwxr-xr-x 1 PRAVEEN 197121     0 May  1 20:19 target/
+				-rw-r--r-- 1 PRAVEEN 197121   148 May  1 21:38 Dockerfile
+
+				PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+				$ docker build -t in28min/hello-world-rest-api:dockerfile1 .  
+				
+				Sending build context to Docker daemon  17.79MB
+				Step 1/3 : FROM openjdk:8-jdk-alpine
+				 ---> a3562aa0b991
+				Step 2/3 : ADD target/hello-world-rest-api.jar hello-world-rest-api.jar
+				 ---> 4dd17b20b1a7
+				Step 3/3 : ENTRYPOINT ["sh","-c","java -jar /hello-world-rest-api.jar]
+				 ---> Running in 539096dbdb55
+				Removing intermediate container 539096dbdb55
+				 ---> 3b49d7572193
+				Successfully built 3b49d7572193
+				Successfully tagged in28min/hello-world-rest-api:dockerfile1
+				SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+				PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api	
+							$ docker build -t in28min/hello-world-rest-api:dockerfile1 .		
+			
+				* As you can see something is send as docker context to docker demon(Sending build context to Docker daemon  17.79MB)
+				  
+				* After many steps as you can see image is built is created and tagged with tag no.
+				
+				Now we have to see how many container is running,1 container is running which we have created earlier
+				
+				PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+				$ docker container ls
+				
+				* now we have to stop it.
+				
+				PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+				$ docker stop 95b774e65390
+				
+				$ docker run -p 8080:8001 in28min/hello-world-rest-api:dockerfile1
+												<TAG WHICH WE HAVE CREATED>
+												
+				    http://192.168.99.100:8080/hello-world		
+				
+4.5 -  Understanding Docker Image Layers, Caching and Dockerfile
+---------------------------------------------------------------------------------			
+	$ docker history in28min/hello-world-rest-api:dockerfile1   ---> show history in image
+	
+	*	If you will run docker build agian it will load every thing from cache.
+	
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+			$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+		
+			After every step  ---> Using cache will come
+			
+	*	Go to Dockerfile and 1 more meta instruction
+		
+			EXPOSE 8081  ---> Used for informaing this container will run on post 8081
+			
+			now run the command against
+			
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+			$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+	
+			Sending build context to Docker daemon  17.79MB
+			Step 1/4 : FROM openjdk:8-jdk-alpine
+			 ---> a3562aa0b991
+			Step 2/4 : EXPOSE 8081
+			 ---> Running in ce4e71306369
+			Removing intermediate container ce4e71306369
+			 ---> 237fa2b00f0b
+			Step 3/4 : ADD target/hello-world-rest-api.jar hello-world-rest-api.jar
+			 ---> 033ee08a91de
+			Step 4/4 : ENTRYPOINT ["sh","-c","java -jar /hello-world-rest-api.jar"]
+			 ---> Running in 9fe332a4cfc6
+			Removing intermediate container 9fe332a4cfc6
+			 ---> bcb4179f442a
+			Successfully built bcb4179f442a
+			Successfully tagged in28min/hello-world-rest-api:dockerfile1
+			
+			
+	* Now change some java code and build jar again
+	
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+			$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+			Sending build context to Docker daemon  17.79MB
+			Step 1/4 : FROM openjdk:8-jdk-alpine
+			 ---> a3562aa0b991
+			Step 2/4 : EXPOSE 8081 --------> here it is loaded from cache
+			 ---> Using cache
+			 ---> 237fa2b00f0b
+			Step 3/4 : ADD target/hello-world-rest-api.jar hello-world-rest-api.jar
+			 ---> 7c98eaa6b049
+			Step 4/4 : ENTRYPOINT ["sh","-c","java -jar /hello-world-rest-api.jar"]
+			 ---> Running in 9e7cf53e5cff
+			Removing intermediate container 9e7cf53e5cff
+			 ---> c97473153848
+			Successfully built c97473153848
+			Successfully tagged in28min/hello-world-rest-api:dockerfile1
+			
+4.6 -  Using Dockerfile Spotify Plugin to Create Docker Images
+---------------------------------------------------------------------------------
+	
+	* How to run docker with 1 command here maven pluging comes into picture
+	
+	* So when we run mvn package command it will create jar & image file.Add this plugin in pom.xml
+	
+		<plugin>
+			<groupId>com.spotify</groupId>
+			<artifactId>dockerfile-maven-plugin</artifactId>
+			<version>1.4.10</version>
+			<executions>
+				<execution>
+					<id>default</id>
+					<goals>
+						<goal>build</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+				<repository>in28min/${project.name}</repository>
+				<tag>${project.version}</tag>
+				<skipDockerfile>true</skipDockerfile>
+			</configuration>
+		</plugin>
+		
+		and do mvn package.
+		
+	* Previousaly only jar is created now docker image will also created as a part of maven build process.
+	
+			Image will be built as in28min/hello-world-rest-api:0.0.1-SNAPSHOT
+			
+	* Now check how many container are running 
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+			$ docker ps
+			
+			Now run the image 
+			
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+			$ docker run -p 8081:8001 in28min/hello-world-rest-api:0.0.1-SNAPSHOT
+			
+				
+			http://192.168.99.100:8081/hello-world-bean
+		
+		
+4.7 -   Create a generic reusable Dockerfile
+---------------------------------------------------------------------------------		
+		
+	* In this process we will create a docker file which will common across multiple project.
+	
+		FROM openjdk:8-jdk-alpine
+		EXPOSE 8081
+		ADD target/*.jar app.jar
+		ENTRYPOINT ["sh","-c","java -jar /app.jar"]
+		
+	* So whatever jar is created inside target folder is copied as app.jar
+	
+		1.Perform mvn package
+		
+		2.$ docker stop 774240066cd8
+		
+		3.$ docker run -p 8081:8001 in28min/hello-world-rest-api:0.0.1-SNAPSHOT
+		
+		
+	* So if we have chnaged any done just perform above 3 steps.
+
+
+4.8 -  Improving Caching of Docker Images by Adding Libraries in a Separate Step
+---------------------------------------------------------------------------------	
+	* Let's explore some other ways to create an image.
+	
+	* previousaly we have JDK and jar in old project.
+	
+				FAT JAR
+			--------------------
+				JDK
+			--------------------
+			
+	* Now for docker image 1st we have JDK & then add dependencyand then copy classes
+	
+			   CLASSESS
+			--------------------
+			 DEPENDENCIES
+			--------------------
+				JDK
+			--------------------
+			
+		most of the time JDK and dependency doesn't change
+		
+	* Now we will split FAT JAR into classes and dependency.Copy this mvn dependency into pom.xml on above of spotify dependency.
+	
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<version>${project.version}</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+	
+		and comment spotify dependency and perform mvn package and atlast you will see
+		
+		Unpacking F:\Workspace\TechM\Docker\01-hello-world-rest-api\target\hello-world-rest-api.jar to F:\Workspace\TechM\Docker\01-hello-world-rest-api\target\dependency with includes "" and excludes ""
+		
+		
+	* Go inside Target folder
+		
+			Target
+			 |
+			 |
+			 |-------dependency
+						|
+						|
+						|----------BOOT-INF
+						|			 |
+						|			 |------------classes   ---->It contains all of the classes for application.
+						|			 |
+						|            |------------lib  ------> It contains all jar which are required to run this application
+						|
+						|
+						|
+						|----------META-INF
+						|
+						|-----------org
+						
+	* Here we want seperate dependency and classes so that dependency layer can be seperated.So
+		
+		1.We will copy lib folder into docker.
+		2.Copy classess into docker
+		3.then copy META-INF.
+		
+		Dockerfile
+		------------------------
+		FROM openjdk:8-jdk-alpine
+		ARG DEPENDENCY=target/dependency
+		COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
+		COPY ${DEPENDENCY}/META-INF /app/META-INF
+		COPY ${DEPENDENCY}/BOOT-INF/classes /app
+		ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.RestfulWebServicesApplication"]
+		
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+		$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+		Sending build context to Docker daemon  35.58MB
+		Step 1/6 : FROM openjdk:8-jdk-alpine
+		 ---> a3562aa0b991
+		Step 2/6 : ARG DEPENDENCY=target/dependency ----> dependency is copied out
+		 ---> Running in 8df89a287d9f
+		Removing intermediate container 8df89a287d9f
+		 ---> 4a59f9faba1e
+		Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib ----> lib is copied out
+		 ---> 5c641f5eecb7
+		Step 4/6 : COPY ${DEPENDENCY}/META-INF /app/META-INF ----> meta inf is copied out
+		 ---> ad2e7de9a916
+		Step 5/6 : COPY ${DEPENDENCY}/BOOT-INF/classes /app
+		 ---> 4a359bca2ec7
+		Step 6/6 : ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.RestfulWebServicesApplication"]
+		 ---> Running in 3c104f58da67
+		Removing intermediate container 3c104f58da67
+		 ---> 9838207dfe10
+		Successfully built 9838207dfe10
+		Successfully tagged in28min/hello-world-rest-api:dockerfile1
+		
+		
+		Now change some code and do mvn package and run the build again.
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+		$ docker build -t in28min/hello-world-rest-api:dockerfile1 .
+		Sending build context to Docker daemon  35.58MB
+		Step 1/6 : FROM openjdk:8-jdk-alpine
+		 ---> a3562aa0b991
+		Step 2/6 : ARG DEPENDENCY=target/dependency
+		 ---> Using cache
+		 ---> 4a59f9faba1e
+		Step 3/6 : COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib   --- > as you can for lib foler is also used as cache
+		 ---> Using cache
+		 ---> 5c641f5eecb7
+		Step 4/6 : COPY ${DEPENDENCY}/META-INF /app/META-INF
+		 ---> abff3d2390d9
+		Step 5/6 : COPY ${DEPENDENCY}/BOOT-INF/classes /app
+		 ---> faa254ba8bf6
+		Step 6/6 : ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.demo.RestfulWebServicesApplication"]
+		 ---> Running in 2a54557fd99a
+		Removing intermediate container 2a54557fd99a
+		 ---> 66fbe17af870
+		Successfully built 66fbe17af870
+		Successfully tagged in28min/hello-world-rest-api:dockerfile1
+		
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api
+		$ docker run -p 8081:8001 in28min/hello-world-rest-api:0.0.1-SNAPSHOT
+		
+		http://192.168.99.100:8081/hello-world-bean
+		
+4.9 -  Using JIB Plugin to Create Docker Images
+---------------------------------------------------------------------------------	
+
+	* Till now we are using docker file maven pluging to build our docker images - by spotify
+	
+	* JIB is also used for docker image.
+	
+	* If you are using JIB we don't require Dcokerfile than delete Dockerfile and add dependency in pom.xml.
+	
+	
+		<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.6.1</version>
+				<configuration>
+					<container>
+						<creationTime>USE_CURRENT_TIMESTAMP</creationTime>  --->creating shold be current time stamp
+					</container>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>   ---> during package phase we build docker file
+						<goals>
+							<goal>dockerBuild</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+	
+	
+	* Why we require USE_CURRENT_TIMESTAMP becoz images should be reproducable that means if i have some source code and used for generate 	image today and i used to same source code after 1 year to generate images i will get same image this is called as reproducablity of
+	image.
+	
+	* Do mvn package and image will create.
+	
+		Built image to Docker daemon as 01-hello-world-rest-api:0.0.1-SNAPSHOT  ----> image is created
+			
+		$ docker history 01-hello-world-rest-api:0.0.1-SNAPSHOT
+			
+		$ docker run -p 8081:8001 01-hello-world-rest-api:0.0.1-SNAPSHOT
+		
+		http://192.168.99.100:8081/hello-world-bean
+		
+	* JIB is java specific.
+	
+	
+4.10 -  Using Fabric8 Docker Maven Plugin to Create Docker Images
+---------------------------------------------------------------------------------		
+
+	* Remove Spotify Maven and JIB Plugins. Add the plugin shown below and configure property for jar file.
+	
+	* Docker spotify plugin provide clear seperation.
+	
+	
+	
+		
+		
+	
+	
+	
+	
+	
+	
+		
+	
+	
+	
+		
+			
