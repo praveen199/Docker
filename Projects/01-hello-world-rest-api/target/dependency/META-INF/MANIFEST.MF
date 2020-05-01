@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Implementation-Title: hello-world-rest-api
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: PRAVEEN
+Implementation-Vendor-Id: com.in28minutes.rest.webservices
+Spring-Boot-Version: 2.2.6.RELEASE
+Main-Class: org.springframework.boot.loader.JarLauncher
+Start-Class: com.example.demo.RestfulWebServicesApplication
+Spring-Boot-Classes: BOOT-INF/classes/
+Spring-Boot-Lib: BOOT-INF/lib/
+Created-By: Apache Maven 3.6.3
+Build-Jdk: 1.8.0_112
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-bo
+ ot-starter-parent/01-hello-world-rest-api
+
