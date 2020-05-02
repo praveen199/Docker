@@ -675,18 +675,129 @@ Section 4: Docker with Java Spring Boot Hello World Rest API
 	* Docker spotify plugin provide clear seperation.
 	
 	
+Section 5: Docker with Java Spring Boot Todo Web Application
+-------------------------------------------------------------------------------	
+5.1 - Setting up 02 Spring Boot Todo Web Application in Local	
+-------------------------------------------------------------------------------
+	* Packaging for this application is war.When we have created project as a war we don't require a tomcat dependency so we have placed 
+	  <scope>provided</scope>.
+	
+	* Run As --> Maven install
+	
+	
+5.2 - Create Docker Image for Spring Boot Todo Web Application
+-------------------------------------------------------------------------------
+	* In this step we will create docker image for the war file.
+	
+	* We will use tomcat to run the war.
+	
+		FROM tomcat:8.0.51-jre8-alpine
+		EXPOSE 8081
+		RUN rm -rf /usr/local/tomcat/webapps/*
+		COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
+		CMD ["catalina.sh","run"]
+	
+	
+	* We have added spotify plugin in pom.xml.
+	
+			PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2
+			$ mvn clean package
+	
+	* Now run the image.
+				
+	 		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2/
+			$ docker run -p 8081:8080 in28min/todo-web-application-h2:0.0.1-SNAPSHOT
+	
+			
+			http://192.168.99.100:8081/login
+	
+5.3 - Uderstanding ENTRYPOINT, CMD, COPY and ADD instructions
+-------------------------------------------------------------------------------	
+	
+	
+		FROM tomcat:8.0.51-jre8-alpine									| FROM openjdk:8-jdk-alpine
+		EXPOSE 8081														| EXPOSE 8081
+		RUN rm -rf /usr/local/tomcat/webapps/*							| ADD target/*.jar app.jar
+		COPY target/*.war /usr/local/tomcat/webapps/ROOT.war			| ENTRYPOINT ["sh","-c","java -jar /app.jar"]
+		CMD ["catalina.sh","run"]										| 
+	
+	
+	* Here we are using COPY and CMD and another Dockerfile we are using ADD & ENTRYPOINT So what is the difference
+
+		COPY -- It allows you to copy files,directory into your container image and with COPY you can't specify url.
+		ADD  -- It allows you to copy local file,local directory and you can specify URL from where you can copy something.
+				If archieve is something format it can unzip the file.
+		
+		Best recommanded way to use COPY.Prefer COPY 
+		
+		CMD -- Default Paaraemter.When you pass parameter from command line your default parameter are overridden.
+		
+			$ docker run -p 8081:8080 in28min/todo-web-application-h2:0.0.1-SNAPSHOT ping google.com
+				
+				It will override the configured command CMD ["catalina.sh","run"] from ping command.
+				
+			
+		ENTRYPOINT -- It will not override parameter
+				
+			$ docker run -p 80001:8081 in28min/hello-world-rest-api:manual2 param1 param2
+			
+			You will see whatever we specified in ENTRYPOINT will not override.By default we can't override ENTRYPOINT but if we want we can 
+			do it.
+			
+5.4 - Pushing 02 Spring Boot Todo Web Application to Docker Hub
+-------------------------------------------------------------------------------	
+	* We are already running our container now we have to push into docker hub.
+	
+	* login to docker
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2
+		$ docker login
+	
+	* After login sucessful now we will push images.
+	
+	* Now changes <repository>in28min/${project.name}</repository> to your username 
+	
+				<repository>3112207043/${project.name}</repository>
+				
+	* perform mvn clean package to build image and you can push this image which you have created.
+	
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2
+		$ mvn clean package
+		
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2
+		$ docker images
+		REPOSITORY                           TAG                  IMAGE ID            CREATED             SIZE
+		3112207043/todo-web-application-h2   0.0.1-SNAPSHOT       8f47c3ec7ba6        20 seconds ago      152MB
+		in28min/todo-web-application-h2      0.0.1-SNAPSHOT       4bd10b7b06be        51 minutes ago      152MB
+		
+		
+	* Now push the image with REPOSITORY NAME & TAG.
+	
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/02-todo-web-application-h2
+		$ docker push 3112207043/todo-web-application-h2:0.0.1-SNAPSHOT
+		The push refers to repository [docker.io/3112207043/todo-web-application-h2]
+		
+	* As you can see by default it will refer to docker.io
+	
+	* Login to docker hub and repository is visible on screen.
+	
+	* Now click on Public View
+	
+	
+Section 6: Docker with Java Spring Boot Todo Web Application using MySql
+-------------------------------------------------------------------------------		
+6.1 - Code Review of 03 Todo Web Application MySQL
+-------------------------------------------------------------------------------	
+	
+
+	
+	
+		
 	
 		
 		
 	
-	
-	
-	
-	
-	
 		
-	
-	
-	
+
 		
 			
