@@ -788,16 +788,104 @@ Section 6: Docker with Java Spring Boot Todo Web Application using MySql
 -------------------------------------------------------------------------------		
 6.1 - Code Review of 03 Todo Web Application MySQL
 -------------------------------------------------------------------------------	
+	* Create applicatino 03-todo-web-application-mysql
 	
+6.2 -  Running MySQL as Docker Container on Local
+-------------------------------------------------------------------------------
+	NOTE : In my system mysql is already running so no need to install mysql in docker.
+	
+	* We will use docker to run our mysql in local & After running below command you will get  
+	
+	$ docker run mysql:5.7
+	  You need to specify one of MYSQL_ROOT_PASSWORD, MYSQL_ALLOW_EMPTY_PASSWORD and MYSQL_RANDOM_ROOT_PASSWORD
+	
+		* --env or -e  ---> both are used for passing as environment variable
+		  --detach or -d ---> it means if you run the command terminal will allow you to enter other command otherwise if it is not is 		 detached mode 1 terminal is linked to 1 conatiner if you close terminal container will closed.
+	  
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+	$ docker run -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=docker_db -e MYSQL_USER=root -e MYSQL_PASSWORD=root mysql:5.7
+	9cf4939bdbc872764e007d56a58030b64f843b8efe3a4de2c465aaf7c7936819
+	
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+	$ docker container list
 
+	* Now we will connect to mysql server but still we are not able to connect becoz we have not mapped 3306 to localhost.We can do it by
+	  using publishing the port.Now stop and remove the image.
+	  
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+	$ docker rm fe22b60274af 9cf4939bdbc8 4cd645c34288
 	
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /c/Program Files/Docker Toolbox
+	$ docker run -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=docker_db -e MYSQL_USER=root -e MYSQL_PASSWORD=root -p 3306:3306 mysql:5.7
+	  
+	NOTE : But in my machine mysql is starting only 30 sec. 
 	
-		
-	
-		
-		
-	
-		
+6.3 - Connect Spring Boot Todo Web App to MySQL on Local	
+-------------------------------------------------------------------------------		
 
+	* Run the below command on in my sql.
+	
+	create table hibernate_sequence (next_val bigint) engine=InnoDB
+	insert into hibernate_sequence values ( 1 )
+	create table todo (id integer not null, description varchar(255), is_done bit not null, target_date datetime(6), user varchar(255), primary key (id)) engine=InnoDB
+	
+	*Do mvn clean install.
 		
+	* Now go to the browser 
+	
+		http://localhost:8081/login
+	
+6.4 - Create Docker Image for 03 Todo Web Application and Use Link to connect
+-------------------------------------------------------------------------------	
+	
+	* Make sure application running on eclipse should be close.
+	
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/03-todo-web-application-mysql
+	$ docker run -p 8081:8081 in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	* We will get exception( Communications link failure) here becoz we have not configured bridge network and bridge network is used for  connecting docker application and mysql.
+	
+	$ docker run -p 8081:8081 --link=mysql in28min/todo-web-application-mysql:0.0.1-SNAPSHOT	
+	For my system it will not run.
+	
+6.5 - Exploring Docker Networking - HOST, BRIDGE and NONE	      
+-------------------------------------------------------------------------------
+
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/03-todo-web-application-mysql
+	$ docker network ls
+	
+	NETWORK ID          NAME                DRIVER              SCOPE
+	2bae1490ad37        bridge              bridge              local
+	d50f00717135        host                host                local
+	4c3948a965bb        none                null                local
+
+	* By default conatiner will launched into bridge network.
+	
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/03-todo-web-application-mysql
+	$ docker inspect 2bae1490ad37
+	
+	$ docker run --network=host in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	$ docker run --network=none in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	* The host networking driver only works on Linux hosts, and is not supported on Docker Desktop for Mac, Docker Desktop for Windows,
+	  or Docker EE for Windows Server.
+	  
+	* If you are selecting nwtwork as none then we have to create our custom image.
+	
+6.6 - Creating a Custom Network and Connect MySQL and WebApplication
+-------------------------------------------------------------------------------
+	PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/03-todo-web-application-mysql
+	$ docker network create web-application-mysql-network
+	
+	
+	$ docker run -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=docker_db -e MYSQL_USER=root -e MYSQL_PASSWORD=root  -p 3306:3306 --network=web-application-mysql-network mysql:5.7
+	
+	$ docker run -p 8081:8081 --network=web-application-mysql-network  in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
+	
+	$ docker inspect --network=web-application-mysql-network
+	
+6.7 - Using Docker Volumes to Persist Data
+-------------------------------------------------------------------------------	
+
 			
