@@ -22,7 +22,7 @@ Section 2: Getting Started with Docker-
 
 2.3 - Your First Docker Usecase - Deploy a Spring Boot Application
 -------------------------------------------------------------------------------
-	* If you want to deploy applciation into different environment.
+	* If you want to deploy application into different environment.
 	
 2.4 - Docker Concepts - Registry, Repository, Tag, Image & Containers
 -------------------------------------------------------------------------------
@@ -45,11 +45,11 @@ Section 2: Getting Started with Docker-
 -------------------------------------------------------------------------------
 	
 	* When we will stop running docker container and application will also stop.If we don't want to stop running 
-	  applciation then we have to run applciation in deatached mode.
+	  application then we have to run applciation in deatached mode.
 	
 	$ docker run -p 5000:5000 -d in28min/todo-rest-api-h2:0.0.1-SNAPSHOT
 	
-	-d : It is used for deattched mode but if you run in deattached mode it won't show logs.
+	-d : It is used for detached mode but if you run in detached mode it won't show logs.
 	
 	* It will show docker id If you want to see the logs then we have to run the command
 	
@@ -139,7 +139,7 @@ Section 2: Getting Started with Docker-
 	
 	* If you want to remove all of the stopped container
 	
-	$ dockker container prune
+	$ docker container prune
 	
 	$ docker container ls -a or  $ docker ps -s ----> both are same
 	
@@ -201,7 +201,7 @@ Section 4: Docker with Java Spring Boot Hello World Rest API
 		
 		go to F:\Workspace\TechM\Docker\01-hello-world-rest-api\target		   	                                               
 	
-		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api/target
+		PRAVEEN@DESKTOP-R3RIOKE MINGW64 /f/Workspace/TechM/Docker/01-hello-world-rest-api/target 
 		$ docker run -dit openjdk:8-jdk-alpine
 		
 		-d --> used for deattached mode
